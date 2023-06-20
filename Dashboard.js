@@ -1,91 +1,166 @@
-import React, { useState } from 'react'
-import Footer from '../Footer';
-import { Bounce } from "react-awesome-reveal";
+import { DashboardCustomizeOutlined } from "@mui/icons-material";
 
-const Dashboard = ({ inactive, toggleoff, stuData, teacherData }) => {
+
+
+
+import '../App.css'
+import Sidebar from './Sidebar'
+import {  Routes, Route, useNavigate } from 'react-router-dom'
+import Home from './Pages/Home'
+import Dashboard from './Pages/Dashboard'
+import Students from './Pages/Students'
+import ManageStudents from './Pages/ManageStudents'
+import Teachers from './Pages/Teachers'
+import ManageTeachers from './Pages/ManageTeachers'
+import { useState } from 'react'
+import Navbar from './Navbar'
+
+const Dashboardd=()=>{
+    // return <h1>Dashboard</h1>
+    
+  const [inactive, setInactive] = useState(false)
+  const [toggleoff, setToggleoff] = useState(false)
+ 
+
+  const navigate = useNavigate()
+
+  const [stuData, setStuData] = useState([])
+  const [teacherData, setTeacherData] = useState([])
+
+  const studentInitialValues = {
+    FirstName: '',
+    LastName: '',
+    Course: '',
+    Batch: '',
+    PhoneNumber: '',
+  }
+
+  const teacherInitialValues = {
+    FirstName: '',
+    LastName: '',
+    JoiningDate: '',
+    PhoneNumber: '',
+    BatchAssigned: '',
+  }
+
+  const [studentFormData, setStudentFormData] = useState(studentInitialValues)
+  const [teacherFormData, setTeacherFormData] = useState(teacherInitialValues)
+
+  const handleSelected = (id) => {
+    const selectedData = stuData.filter((row) => row.id === id)[0]
+
+    setStudentFormData(selectedData)
+    navigate('/students/ManageStudents')
+  }
+
+  const teacherHandleSelected = (id) => {
+    const selectedData = teacherData.filter((row) => row.id === id)[0]
+
+    setTeacherFormData(selectedData)
+    navigate('/teachers/ManageTeachers')
+  }
+
   return (
-    <div>
-      <div
-        className={`content ${inactive ? 'inactive' : ''} ${
-          toggleoff ? 'toggleoff' : ''
-        }`}
-      >
-        <div className="container">
-          <h1>Our Statistics</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Id
-            reiciendis fuga fugiat, ad labore quasi deleniti? Veniam earum fuga
-            doloremque!
-          </p>
-          < Bounce >
-          <div className="row">
-            <div className="col-md-4 col-xl-3">
-              <div className="card bg-c-blue order-card">
-                <div className="card-block">
-                  <h6 className="m-b-20">Total Students</h6>
-                  <h2 className="text-right">
-                    <i className="fa-solid fa-graduation-cap mx-2"></i>
-                    <span>{stuData.length}</span>
-                  </h2>
-                  <p className="m-b-0">
-                    Satisfied Students
-                    <span className="f-right">{stuData.length}</span>
-                  </p>
-                </div>
-              </div>
-            </div>
+    <div className="App">
+    <div className="wrapper">
+ 
+   
 
-            <div className="col-md-4 col-xl-3">
-              <div className="card bg-c-green order-card">
-                <div className="card-block">
-                  <h6 className="m-b-20">Total Teachers</h6>
-                  <h2 className="text-right">
-                    <i className="fa-solid fa-person-chalkboard mx-2"></i>
-                    <span>{teacherData.length}</span>
-                  </h2>
-                  <p className="m-b-0">
-                    Student Ratings<span className="f-right">8/10</span>
-                  </p>
-                </div>
-              </div>
-            </div>
+      <Sidebar
+        onCollapse={(inactive) => {
+          setInactive(inactive)
+        }}
+        onToggleOff={(toggleoff) => {
+          setToggleoff(toggleoff)
+        }}
+      
+      />
+ 
+      <Navbar inactive={inactive} toggleoff={toggleoff} />
 
-            <div className="col-md-4 col-xl-3">
-              <div className="card bg-c-yellow order-card">
-                <div className="card-block">
-                  <h6 className="m-b-20">Courses Subscribed</h6>
-                  <h2 className="text-right">
-                    <i className="fa-solid fa-credit-card mx-2"></i>
-                    <span>122</span>
-                  </h2>
-                  <p className="m-b-0">
-                    Content Rating<span className="f-right">9/10</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="col-md-4 col-xl-3">
-              <div className="card bg-c-pink order-card">
-                <div className="card-block">
-                  <h6 className="m-b-20">Active Visitors</h6>
-                  <h2 className="text-right">
-                    <i className="fa-solid fa-eye mx-2"></i>
-                    <span>486</span>
-                  </h2>
-                  <p className="m-b-0">
-                    Completed Orders<span className="f-right">351</span>
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-          </Bounce>
-          <Footer />
-        </div>
-      </div>
+      <Routes>
+        <Route
+          exact
+          path="/"
+          element={<Home inactive={inactive} toggleoff={toggleoff} />}
+        />
+        <Route
+          exact
+          path="/dashboard"
+          element={
+            <Dashboard
+              inactive={inactive}
+              toggleoff={toggleoff}
+              stuData={stuData}
+              setStuData={setStuData}
+              teacherData={teacherData}
+              setTeacherData={setTeacherData}
+            />
+          }
+        />
+        <Route
+          exact
+          path="/students"
+          element={
+            <Students
+              inactive={inactive}
+              toggleoff={toggleoff}
+              handleSelected={handleSelected}
+              stuData={stuData}
+              setStuData={setStuData}
+            />
+          }
+        />
+        <Route
+          exact
+          path="/students/ManageStudents"
+          element={
+            <ManageStudents
+              inactive={inactive}
+              toggleoff={toggleoff}
+              handleSelected={handleSelected}
+              studentFormData={studentFormData}
+              setStudentFormData={setStudentFormData}
+              studentInitialValues={studentInitialValues}
+              stuData={stuData}
+              setStuData={setStuData}
+            />
+          }
+        />
+        <Route
+          exact
+          path="/teachers"
+          element={
+            <Teachers
+              inactive={inactive}
+              toggleoff={toggleoff}
+              teacherData={teacherData}
+              setTeacherData={setTeacherData}
+              teacherHandleSelected={teacherHandleSelected}
+            />
+          }
+        />
+        <Route
+          exact
+          path="/teachers/ManageTeachers"
+          element={
+            <ManageTeachers
+              inactive={inactive}
+              toggleoff={toggleoff}
+              teacherData={teacherData}
+              setTeacherData={setTeacherData}
+              teacherFormData={teacherFormData}
+              setTeacherFormData={setTeacherFormData}
+              teacherInitialValues={teacherInitialValues}
+            />
+          }
+        />
+      </Routes>
     </div>
+  </div>
   )
+
 }
 
-export default Dashboard
+
+export default Dashboardd;
